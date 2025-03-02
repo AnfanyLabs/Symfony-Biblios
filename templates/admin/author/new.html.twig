@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Ajout d'un nouvel auteur {% endblock %}
+
+{% block body %}
+
+{{ form_start(form) }}
+    <div class="card text-light my-4 p-4 bg-dark">
+        <div class="card-header text-center">
+            Ajouter un nouvel auteur
+        </div>
+        <div class="card-body">
+            {{ form_row(form.name, {'label':'Nom:'}) }}
+            {{ form_row(form.dateOfBirth, {'label': 'Date de naissance:'}) }} 
+            {{ form_row(form.dateOfDeath, {'label':'Mort le:'}) }}
+            {{ form_row(form.nationality, {'label':'Nationalité:'}) }}
+            {{ form_row(form.books, {'label':'Livres:'}) }}
+            <button class="btn btn-primary">Envoyer</button>
+        </div>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

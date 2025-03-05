@@ -6,7 +6,6 @@ use App\Enum\BookStatus;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
@@ -20,23 +19,25 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Author $authors = null;
+    /**
+     * @var Collection<int, Author>
+     */
+    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]
+    private Collection $authors;
 
     #[ORM\Column(length: 255)]
     private ?string $isbn = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $cover = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     private ?Editor $editor = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $editedAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $plot = null;
 
     #[ORM\Column]
@@ -45,15 +46,9 @@ class Book
     #[ORM\Column(length: 255)]
     private ?BookStatus $status = null;
 
-    /**
-     * @var Collection<int, Comment>
-     */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'book')]
-    private Collection $comments;
-
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+        $this->authors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,14 +68,26 @@ class Book
         return $this;
     }
 
-    public function getAuthors(): ?Author
+    /**
+     * @return Collection<int, Author>
+     */
+    public function getAuthors(): Collection
     {
         return $this->authors;
     }
 
-    public function setAuthors(?Author $authors): static
+    public function addAuthor(Author $author): static
     {
-        $this->authors = $authors;
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthor(Author $author): static
+    {
+        $this->authors->removeElement($author);
 
         return $this;
     }
@@ -102,7 +109,7 @@ class Book
         return $this->cover;
     }
 
-    public function setCover(string $cover): static
+    public function setCover(?string $cover): static
     {
         $this->cover = $cover;
 
@@ -126,7 +133,7 @@ class Book
         return $this->editedAt;
     }
 
-    public function setEditedAt(\DateTimeImmutable $editedAt): static
+    public function setEditedAt(?\DateTimeImmutable $editedAt): static
     {
         $this->editedAt = $editedAt;
 
@@ -138,7 +145,7 @@ class Book
         return $this->plot;
     }
 
-    public function setPlot(string $plot): static
+    public function setPlot(?string $plot): static
     {
         $this->plot = $plot;
 
@@ -165,36 +172,6 @@ class Book
     public function setStatus(BookStatus $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getBook() === $this) {
-                $comment->setBook(null);
-            }
-        }
 
         return $this;
     }

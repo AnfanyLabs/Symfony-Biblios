@@ -6,8 +6,11 @@ use App\Repository\EditorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: EditorRepository::class)]
+#[UniqueEntity(fields:['name'], message:"Un éditeur porte déjà ce même nom.")]
+
 class Editor
 {
     #[ORM\Id]

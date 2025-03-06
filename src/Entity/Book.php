@@ -7,8 +7,14 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+
+#[UniqueEntity(fields:['title'], message:'Ce titre est déjà utilisé')]
+#[UniqueEntity(fields:['isbn'], message:'Cette valeur isbn est déjà utilisée')]
+
 class Book
 {
     #[ORM\Id]
@@ -26,9 +32,14 @@ class Book
     private Collection $authors;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Isbn(
+        type:Assert\Isbn::ISBN_10,
+        message:"Cette  valeur est invalide"
+    )]
     private ?string $isbn = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(options:null, message:"Cette valeur doit être une url.")]
     private ?string $cover = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
@@ -41,6 +52,7 @@ class Book
     private ?string $plot = null;
 
     #[ORM\Column]
+    #[Assert\Positive()]
     private ?int $pageNumber = null;
 
     #[ORM\Column(length: 255)]

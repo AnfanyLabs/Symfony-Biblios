@@ -5,9 +5,15 @@ namespace App\Entity;
 use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
+
+#[UniqueEntity(fields:['name'], message:'Un autre auteur porte déjà ce même nom.')]
+
 class Author
 {
     #[ORM\Id]
@@ -15,12 +21,16 @@ class Author
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(min:10)]
+    #[Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[Assert\NotBlank()]
+    #[ORM\Column()]
     private ?\DateTimeImmutable $dateOfBirth = null;
 
+    #[Assert\GreaterThan(propertyPath:('dateOfBirth'))]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateOfDeath = null;
 
@@ -33,6 +43,7 @@ class Author
     #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'authors')]
     private Collection $books;
 
+    
     public function __construct()
     {
         $this->books = new ArrayCollection();

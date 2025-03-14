@@ -33,7 +33,7 @@ class Book
 
     #[ORM\Column(length: 255)]
     #[Assert\Isbn(
-        type:Assert\Isbn::ISBN_10,
+        type:Assert\Isbn::ISBN_13,
         message:"Cette  valeur est invalide"
     )]
     private ?string $isbn = null;

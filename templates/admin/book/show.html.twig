@@ -1,0 +1,34 @@
+    {% extends 'base.html.twig' %}
+
+{% block title %}Détails sur un livre {% endblock %}
+
+{% block body %}
+
+    <h1 class="text-white">Livre : </h1>
+    {% if book is not null %}
+        <div class="card mb-1 m-auto">
+            <div class="card-body">
+                <div class="card-title d-flex justify-content-between">
+                    <h4 class="mb-1">{{ book.title }}</h4>
+                    <small>Identifiant : {{ book.id }}</small>
+                </div>
+                <div class="d-flex justify-content-between card-text">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Date de publication : {{ book.editedAt|date('d-m-Y') }}</li>
+                    </ul>
+                    <div>{{ book.editedAt|date('m-Y')}}</div>
+                    <div><small>Status:{{ book.status.value }}</small></div>
+                    <div><small>Plot:{{ book.plot }}</small></div>
+                    <div><small>Nombre de pages:{{ book.pageNumber }}</small></div>
+                         
+                         {% for author in book.authors %}
+                            <p><small>Auteur : {{ author.name }}</small></p>
+                         {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div>Auteur non trouvé</div>
+    {% endif %}
+</div>
+{% endblock %}

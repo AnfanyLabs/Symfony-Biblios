@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Author;
 use App\Form\AuthorType;
+use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AuthorController extends AbstractController
 {
     #[Route('', name: 'app_admin_author_index')]
-    public function index(): Response
+    public function index(Request $request, AuthorRepository $authorRepository): Response
     {
+        $dates = [];
+        if($request->query->has('neLe')){
+            $dates['neLe'] = $request->query->get('neLe');
+        }
+        if($request->query->has('mortLe')){
+            $dates['mortLe'] = $request->query->get('mortLe');
+        }
+
+        $authors = $authorRepository->findByDateOfBirth($dates);
+
+
         return $this->render('admin/author/index.html.twig', [
-            'controller_name' => 'AuthorController',
+            'authors' => $authors,
         ]);
     }
 
@@ -47,4 +59,14 @@ final class AuthorController extends AbstractController
            'form' =>$form,
         ]);
     }
+
+
+    #[Route('/{id}', name: 'app_admin_author_show', methods:['GET'])]
+    public function show( Author $author){
+        return $this->render('/admin/author/show.html.twig',[
+            'author'  => $author,
+        ]);
+    }
+
+    
 }

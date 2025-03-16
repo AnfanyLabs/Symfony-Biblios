@@ -11,6 +11,10 @@
                 <div class="card-title d-flex justify-content-between">
                     <h4 class="mb-1">{{ editor.name }}</h4>
                     <small>Identifiant : {{ editor.id }}</small>
+                    <span>
+                       <a href="{{ path('app_admin_editor_edit', {id: editor.id})}}" class = "btn btn-primary">Mettre à jour l'éditeur</a>
+                       <a href="{{ path('app_admin_editor_index')}}" class = "btn btn-primary">Retour à la liste des éditeurs</a>
+                    </span>
                 </div>
             </div>
         </div>

@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Ajout d'un nouvel auteur {% endblock %}
+{% set action = app.current_route == 'app_admin_author_new' ? "Ajout d'un nouvel ":"Édition de l'" %}
+{% block title %} {{ action }}  auteur {% endblock %}
 
 {% block body %}
 
 {{ form_start(form) }}
     <div class="card text-light my-4 p-4 bg-dark">
         <div class="card-header text-center">
-            Ajouter un nouvel auteur
+            {{ action }} auteur
         </div>
         <div class="card-body">
           {{ form_widget(form) }}
-            <button class="btn btn-primary">Envoyer</button>
+            <button class="btn btn-primary">{{ app.current_route == 'app_admin_author_new' ? 'Envoyer':'Mettre à jour'}}</button>
         </div>
     </div>
 {{ form_end(form) }}

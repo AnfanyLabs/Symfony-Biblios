@@ -40,18 +40,22 @@ final class AuthorController extends AbstractController
      * Create a new author
      */
     #[Route('/new', name: 'app_admin_author_new', methods:['GET', 'POST'])]
-
-    public function new(Request $request, EntityManagerInterface $entityManager):Response
+    #[Route('/{id}/edit', name: 'app_admin_author_edit', methods:['GET','POST'], requirements:['id'=>'\d+'])]
+   
+    public function new(? Author $author, Request $request, EntityManagerInterface $entityManager):Response
     {
-        $author = new Author();
+        
+
+        $author ??= new Author();
         $form = $this->createForm(AuthorType::class, $author);
+        
         
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
            $entityManager->persist($author);
            $entityManager->flush();
-           return $this->redirectToRoute('app_admin_author_index');
+           return $this->redirectToRoute('app_admin_author_show', ['id'=>$author->getId()]);
         }
 
 
@@ -68,5 +72,27 @@ final class AuthorController extends AbstractController
         ]);
     }
 
+    /**
+     * Update an author
+     */
+
+    // #[Route('/{id}/edit', name: 'app_admin_author_edit', methods:['POST'], requirements:['id'=>'\d+'])]
+
+    // public function edit(Author $author, Request $request, EntityManagerInterface $entityManager){
+    //     $form = $this->createForm(AuthorType::class, $author);
+        
+
+    //     $form->handleRequest($request);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //        $entityManager->persist($author);
+    //        $entityManager->flush();
+    //        return $this->redirectToRoute('app_admin_author_index');
+    //     }
+
+
+    //     return $this->render('/admin/author/edit.html.twig', [
+    //        'form' =>$form,
+    //     ]);
+    // }
     
 }

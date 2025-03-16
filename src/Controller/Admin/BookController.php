@@ -24,9 +24,10 @@ final class BookController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_book_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager):Response{
+    #[Route('/{id}/edit', name:'app_admin_book_edit', methods:['GET', 'POST'], requirements:['id'=>"\d+"])]
+    public function new(?Book $book,  Request $request, EntityManagerInterface $entityManager):Response{
         
-        $book = new Book;
+        $book ??= new Book;
         
         $form = $this->createForm(BookType::class, $book);
 
@@ -35,7 +36,7 @@ final class BookController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($book);
             $entityManager->flush();
-            return $this->redirectToRoute('app_admin_book_index');
+            return $this->redirectToRoute('app_admin_book_show', ['id'=>$book->getId()]);
         }
 
         return $this->render('admin/book/new.html.twig',[

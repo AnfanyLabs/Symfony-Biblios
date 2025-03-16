@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Edition d'un auteur {% endblock %}
+
+{% block body %}
+
+{{ form_start(form) }}
+    <div class="card text-light my-4 p-4 bg-dark">
+        <div class="card-header text-center">
+            Ajouter un nouvel auteur
+        </div>
+        <div class="card-body">
+          {{ form_row(form.name) }}
+            <button class="btn btn-primary">Envoyer</button>
+        </div>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

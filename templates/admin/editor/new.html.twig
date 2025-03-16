@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
+    {% set action = app.current_route == 'app_admin_editor_new' ? "Ajout d'un nouvel ": "Édition d'un " %}
 
-{% block title %} Ajout d'un nouvel éditeur {% endblock %}
+{% block title %} {{action}} éditeur {% endblock %}
 
 {% block body %}
 
 {{ form_start(form) }}
     <div class="card text-light my-4 bg-dark">
         <div class="card-header text-center">
-            Ajouter un nouvel éditeur
+            {{ action }} éditeur
         </div>
         <div class="card-body">
             {{ form_row(form.name, {'label':'Nom:'}) }}
-            <button class="btn btn-primary">Envoyer</button>
+            <button class="btn btn-primary">{{ app.current_route == 'app_admin_editor_new' ? "Publier": "Mettre à jour " }}</button>
         </div>
     </div>
 {{ form_end(form) }}

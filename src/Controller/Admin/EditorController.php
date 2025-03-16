@@ -29,16 +29,18 @@ final class EditorController extends AbstractController
      * Create a new editor
      */
     #[Route('/new', name: 'app_admin_editor_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager):Response
+    #[Route('/{id}/edit', name:'app_admin_editor_edit',  methods: ['GET', 'POST'],  requirements:['is'=>"\d+"])]
+
+    public function new(? Editor $editor,  Request $request, EntityManagerInterface $entityManager):Response
     {
-        $editor = new Editor();
+        $editor ??= new Editor();
         $form = $this->createForm(EditorType::class, $editor);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($editor);
             $entityManager->flush();
-            return $this->redirectToRoute('app_admin_editor_index');
+            return $this->redirectToRoute('app_admin_editor_show',['id' => $editor->getId()]);
         }
         return $this->render('admin/editor/new.html.twig',[
          'form' => $form    

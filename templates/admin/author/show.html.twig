@@ -18,6 +18,10 @@
                         <li class="list-group-item">Date de décès : {{ author.dateOfDeath ?  author.dateOfDeath|date('d-m-Y') : '-'}}</li>
                     </ul>
                     <p><small>Nationalité : {{ author.nationality }}</small></p>
+                    <span>
+                       <a href="{{ path('app_admin_author_edit', {id: author.id})}}" class = "btn btn-primary">Éditer l'auteur</a>
+                       <a href="{{ path('app_admin_author_index')}}" class = "btn btn-primary">Retour à la liste des auteurs</a>
+                    </span>
                 </div>
             </div>
         </div>

@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Ajout d'un nouveau livre {% endblock %}
+{% set action = app.current_route == 'app_admin_book_new' ? "Ajouter un nouveau ": "Éditer le " %}
+
+{% block title %} {{action }} livre {% endblock %}
 
 {% block body %}
 
 {{ form_start(form) }}
     <div class="card text-light my-4 bg-dark">
         <div class="card-header text-center">
-            Ajouter un nouveau livre
+            {{action}} livre
         </div>
         <div class="card-body">
              {{ form_row(form.title, {'label':'Titre de l\'ouvrage:'} ) }}
@@ -19,7 +21,7 @@
              {{ form_row(form.status, {'label':'Status:'} ) }}
              {{ form_row(form.authors, {'label':'Auteur(s)'} ) }}
              {{ form_row(form.editor, {'label':'Editeur:'} ) }}
-            <button class="btn btn-primary">Envoyer</button>
+            <button class="btn btn-primary">{{app.current_route == 'app_admin_book_new' ? "Publier": "Mettre à jour"}}</button>
         </div>
     </div>
 {{ form_end(form) }}
